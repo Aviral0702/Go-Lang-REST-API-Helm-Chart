@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"github.com/julienschmidt/httprouter"
 )
 
-func main() {
-	fmt.Println("hello to my new program")
+func newRouter() *httprouter.Router {
+
 }
