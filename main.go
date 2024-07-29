@@ -23,6 +23,9 @@ func info() {
 		fmt.Println("Error in fetching data")
 	}
 	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
 	content := string(body)
 	fmt.Println(content)
 
