@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"structs"
 	"syscall"
 	"time"
 
@@ -17,7 +16,7 @@ import (
 func newRouter() *httprouter.Router {
 	mux := httprouter.New()
 
-	mux.GET("youtube/channel/stats", getChannelStats())
+	mux.GET("/youtube.com/channel/stats", getChannelStats())
 
 	return mux
 }
@@ -35,27 +34,26 @@ func main() {
 	}
 	idleConnectionClosed := make(chan struct{})
 	go func() {
-		sigint := make(chan os.Signal,1)
-		signal.Notify(sigint,os.Interrupt)
-		signal.Notify(sigint,syscall.SIGTERM)
+		sigint := make(chan os.Signal, 1)
+		signal.Notify(sigint, os.Interrupt)
+		signal.Notify(sigint, syscall.SIGTERM)
 		<-sigint
 
 		log.Println("service interrupt recieved")
 
-		ctx, cancel := context.WithTimeout((context.Background(),60*time.Second))
+		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 
 		defer cancel()
 
-		if err := srv.Shutdown(ctx); err!=nil {
-			log.Fatalf("server shutdown failed %v",err)
+		if err := srv.Shutdown(ctx); err != nil {
+			log.Fatalf("server shutdown failed %v", err)
 		}
 
 		log.Println("Shutdown closed successfully")
 
 		close(idleConnectionClosed)
 
-	}
-
+	}()
 
 	if err := srv.ListenAndServe(); err != nil {
 		if !errors.Is(err, http.ErrServerClosed) {
