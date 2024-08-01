@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -16,15 +17,14 @@ import (
 func newRouter() *httprouter.Router {
 	mux := httprouter.New()
 
+	ytApiKey := os.Getenv("YOUTUBE_API_KEY")
+	if ytApiKey == "" {
+		log.Fatal("Api key not found")
+	}
+
 	mux.GET("/youtube.com/channel/stats", getChannelStats())
 
 	return mux
-}
-
-func getChannelStats() httprouter.Handle {
-	return httprouter.Handle(func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		w.Write([]byte("Hello, World!"))
-	})
 }
 
 func main() {
@@ -60,6 +60,7 @@ func main() {
 			log.Fatalf("fatal http server failed to start %v", err)
 		}
 	}
+	fmt.Println("Server has started")
 	<-idleConnectionClosed
 	log.Println("Service Stop")
 
