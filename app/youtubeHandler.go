@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"google.golang.org/api/option"
+	"google.golang.org/api/youtube/v3"
 )
 
 type YoutubeStats struct {
@@ -23,6 +27,12 @@ func getChannelStats() httprouter.Handle {
 			MinutesWatched: 1000,
 			Views:          5000,
 		}
+		ctx := context.Background()
+		yts, err := youtube.NewService(ctx, option.WithAPIKey(k))
+		if err != nil {
+			fmt.Println("failed to create a service")
+		}
+		yts.Channels.list([]string{"contentDetails"})
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
