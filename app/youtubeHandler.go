@@ -32,8 +32,8 @@ func getChannelStats(k string) httprouter.Handle {
 		if err != nil {
 			fmt.Println("failed to create a service")
 		}
-		call := yts.Channels.List([]string{"contentDetails"})
-		resp, err := call.Mine(true).Do()
+		call := yts.Channels.List([]string{"snippet,contentDetails,statistics"})
+		resp, err := call.ForUsername().Do()
 		fmt.Println("Response ", resp)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
