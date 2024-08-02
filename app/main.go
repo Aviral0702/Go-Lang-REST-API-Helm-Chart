@@ -27,7 +27,12 @@ func newRouter() *httprouter.Router {
 		log.Fatal("Api key not found")
 	}
 
-	mux.GET("/youtube.com/channel/stats", getChannelStats(ytApiKey))
+	channelId := os.Getenv("CHANNEL_ID")
+	if channelId == "" {
+		log.Fatal("Channel id not found")
+	}
+
+	mux.GET("/youtube.com/channel/stats", getChannelStats(ytApiKey, channelId))
 
 	return mux
 }
