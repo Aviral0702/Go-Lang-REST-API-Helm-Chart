@@ -3,6 +3,7 @@ module github.com/Aviral0702/Go-Lang-REST-API-Helm-Chart.git
 go 1.22.5
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/julienschmidt/httprouter v1.3.0
 	google.golang.org/api v0.190.0
 )

@@ -4,8 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
 	"google.golang.org/api/option"
 	"google.golang.org/api/youtube/v3"
@@ -21,6 +24,10 @@ type YoutubeStats struct {
 func getChannelStats(k string) httprouter.Handle {
 	return httprouter.Handle(func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		// w.Write([]byte("Hello, World!"))
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatalf("Error loading .env file")
+		}
 		yt := YoutubeStats{
 			Subscribers:    50,
 			ChannelName:    "Codehakase",
@@ -33,8 +40,12 @@ func getChannelStats(k string) httprouter.Handle {
 			fmt.Println("failed to create a service")
 		}
 		call := yts.Channels.List([]string{"snippet,contentDetails,statistics"})
-		resp, err := call.ForUsername().Do()
-		fmt.Println("Response ", resp)
+		channelId := os.Getenv(CHANNEL_ID)
+		resp, err := call.Id(channelId).Do()
+		if err != nil {
+			fmt.Println("failed to fetch channel stats")
+		}
+		fmt.Println("Response is here: ", resp)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
