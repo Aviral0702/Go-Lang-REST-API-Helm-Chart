@@ -18,7 +18,7 @@ type YoutubeStats struct {
 	Views          int    `json:"views"`
 }
 
-func getChannelStats() httprouter.Handle {
+func getChannelStats(k string) httprouter.Handle {
 	return httprouter.Handle(func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		// w.Write([]byte("Hello, World!"))
 		yt := YoutubeStats{
